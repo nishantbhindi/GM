@@ -1,0 +1,29 @@
+//
+//  Employee.h
+//  iOSCodeStructure
+//
+//  Created by Nishant on 10/01/13.
+//  Copyright (c) 2013 Nishant. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface Employee : NSObject {
+	int intEmployeeID;
+	
+	NSString *strEmployeeName;
+	NSString *strEmployeeCode;
+	
+	int intIsActive;
+	int intIsDeleted;
+}
+
+@property(nonatomic) int intEmployeeID;
+
+@property(nonatomic, retain) NSString *strEmployeeName;
+@property(nonatomic, retain) NSString *strEmployeeCode;
+
+@property(nonatomic) int intIsActive;
+@property(nonatomic) int intIsDeleted;
+
+@end

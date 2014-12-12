@@ -1,0 +1,24 @@
+//
+//  AppFunctionManager.h
+//  iOSCodeStructure
+//
+//  Created by Nishant on 27/12/12.
+//  Copyright (c) 2012 Nishant. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+//#import "NotificationPopViewController.h"
+
+@interface AppFunctionManager : NSObject {
+    
+}
+
+// Add Footer
++(void)addFooterView:(UIView*)pViewToAddFooter withAppDelegate:(AppDelegate*)pAppDelegate withViewController:(UIViewController*)pViewController withControlDelegate:(id)pDelegate withTitle:(NSString *)pstrTitle;
+
+// Notification Popover
+//+ (void)showNotificationPopover:(UIPopoverController *)pobjPopoverNotification withNotiPopViewController:(NotificationPopViewController *)pobjNotiPopViewCont withNotificationCount:(int)pintNotiCount withControlDelegate:(id)pDelegate withSender:(id)sender withDisplayViewController:(UIViewController*)pViewController;
++ (void)showNotificationPopover:(AppDelegate*)pAppDelegate withControlDelegate:(id)pDelegate withSender:(id)sender withDisplayViewController:(UIViewController*)pViewController;
++ (CGFloat)getNotificationPopHeight:(int)pintNotificationCount;
+
+@end

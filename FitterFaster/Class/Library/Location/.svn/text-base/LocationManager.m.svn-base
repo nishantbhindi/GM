@@ -1,0 +1,153 @@
+//
+//  LocationManager.m
+//  iOSCodeStructure
+//
+//  Created by Nishant on 15/01/13.
+//  Copyright (c) 2013 Nishant. All rights reserved.
+//
+
+#import "LocationManager.h"
+
+static LocationManager* sharedLocationManager = nil;
+
+@implementation LocationManager
+
+@synthesize locationManager;
+@synthesize locationDefined,locationDenied;
+@synthesize currentLatitude,currentLongitude;
+@synthesize strThoroughFare, strLocality, strAdministrativeArea, strPostCode, strCountry, strCountryCode;
+
+#pragma mark -
+#pragma mark Singleton Methods
++ (LocationManager *)sharedInstance {
+    @synchronized(self) {
+        if(sharedLocationManager == nil)
+            sharedLocationManager = [[super allocWithZone:NULL] init];
+    }
+    return sharedLocationManager;
+}
++ (id)allocWithZone:(NSZone *)zone {
+    return [[self sharedInstance] retain];
+}
+- (id)copyWithZone:(NSZone *)zone
+{
+    return self;
+}
+- (id)retain
+{
+    return self;
+}
+- (unsigned)retainCount
+{
+    return UINT_MAX;  // denotes an object that cannot be released
+}
+- (oneway void)release {
+    // never release
+}
+- (id)autorelease
+{
+    return self;
+}
+- (id)init
+{
+    //if ((self = [super init])) {
+ 	self = [super init];
+	if (self != nil)
+	{
+		appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		
+		self.locationDefined = NO;
+		self.locationDenied = NO;
+        
+		self.locationManager = [[[CLLocationManager alloc] init] autorelease];
+		self.locationManager.delegate = self;
+		//self.locationManager.distanceFilter = 1000.0;
+		self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+		
+		if([FunctionManager isSimulator])
+		{
+			self.currentLatitude = g_Default_Latitude;
+			self.currentLongitude = g_Default_Longitude;
+		}
+		else
+			[locationManager startUpdatingLocation];
+	}
+	return self;
+}
+- (void)dealloc
+{
+	[self.strThoroughFare release];
+	[self.strLocality release];
+	[self.strAdministrativeArea release];
+	[self.strPostCode release];
+	[self.strCountry release];
+	[self.strCountryCode release];
+	
+	[super dealloc];
+}
+
+#pragma mark -
+#pragma mark CLLocationManagerDelegate Methods
+- (void)locationManager:(CLLocationManager*)manager	didUpdateToLocation:(CLLocation*)newLocation fromLocation:(CLLocation*)oldLocation
+{
+	self.locationDefined = YES;
+	self.locationDenied = NO;
+	self.currentLatitude = newLocation.coordinate.latitude;
+	self.currentLongitude = newLocation.coordinate.longitude;
+	
+	appDelegate.isGPSLocationActive =TRUE;
+	
+	// this creates a MKReverseGeocoder to find a placemark using the found coordinates
+    MKReverseGeocoder *geoCoder = [[[MKReverseGeocoder alloc] initWithCoordinate:newLocation.coordinate] autorelease];
+    geoCoder.delegate = self;
+    [geoCoder start];
+}
+- (void)locationManager:(CLLocationManager*)manager didFailWithError:(NSError*)error
+{
+	if([error code]== kCLErrorDenied)
+		self.locationDenied = YES;
+	
+	switch ([error code]) {
+            // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
+            // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
+        case kCLErrorDenied:
+            [appDelegate showAllowGPSLocationView];
+        default:
+            break;
+    }
+	
+	self.locationDefined = NO;
+	
+	self.strThoroughFare = @"";
+	self.strLocality = @"";
+	self.strAdministrativeArea = @"";
+	self.strPostCode = @"";
+	self.strCountry = @"";
+	self.strCountryCode = @"";
+}
+// this delegate is called when the reverseGeocoder finds a placemark
+- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFindPlacemark:(MKPlacemark *)placemark
+{
+	self.strThoroughFare = placemark.thoroughfare;
+	self.strLocality = placemark.locality;
+	self.strAdministrativeArea = placemark.administrativeArea;
+	self.strPostCode = placemark.postalCode;
+	self.strCountry = placemark.country;
+	self.strCountryCode = placemark.countryCode;
+	
+	//NSLog(@"%@-%@-%@-%@-%@-%@", self.strThoroughFare, self.strLocality, self.strAdministrativeArea, self.strPostCode, self.strCountry, self.strCountryCode);
+}
+// this delegate is called when the reversegeocoder fails to find a placemark
+- (void)reverseGeocoder:(MKReverseGeocoder *)geocoder didFailWithError:(NSError *)error
+{
+    //NSLog(@"reverseGeocoder:%@ didFailWithError:%@", geocoder, error);
+	
+	self.strThoroughFare = @"";
+	self.strLocality = @"";
+	self.strAdministrativeArea = @"";
+	self.strPostCode = @"";
+	self.strCountry = @"";
+	self.strCountryCode = @"";
+}
+
+@end

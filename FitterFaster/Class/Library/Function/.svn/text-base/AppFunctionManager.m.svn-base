@@ -1,0 +1,81 @@
+//
+//  AppFunctionManager.m
+//  iOSCodeStructure
+//
+//  Created by Nishant on 27/12/12.
+//  Copyright (c) 2012 Nishant. All rights reserved.
+//
+
+#import "AppFunctionManager.h"
+#import "CustomPopoverBackgroundView.h"
+
+//#define kNOTIFICATION_MAX_HEIGHT         ((g_IS_IPHONE_5_SCREEN) ? 460.0 : 375.0)
+
+@implementation AppFunctionManager
+
+#pragma mark - Add Footer
++(void)addFooterView:(UIView*)pViewToAddFooter withAppDelegate:(AppDelegate*)pAppDelegate withViewController:(UIViewController*)pViewController withControlDelegate:(id)pDelegate withTitle:(NSString *)pstrTitle;
+{
+	FooterViewController *objFooterViewController = [[FooterViewController alloc]initWithNibName:@"FooterViewController" bundle:nil];
+	//[objFooterViewController.view setFrame:CGRectMake(0.0, 425.0, 320.0, 123.0)];
+    [objFooterViewController.view setFrame:CGRectMake(0.0, [[UIScreen mainScreen] bounds].size.height - objFooterViewController.view.frame.size.height-20.0, objFooterViewController.view.frame.size.width, objFooterViewController.view.frame.size.height)];
+	[pViewToAddFooter addSubview:objFooterViewController.view];
+    [objFooterViewController setParent:pDelegate withTitle:pstrTitle];
+}
+
+#pragma mark - Notification Popover
+/*+ (void)showNotificationPopover:(UIPopoverController *)pobjPopoverNotification withNotiPopViewController:(NotificationPopViewController *)pobjNotiPopViewCont withNotificationCount:(int)pintNotiCount withControlDelegate:(id)pDelegate withSender:(id)sender withDisplayViewController:(UIViewController*)pViewController
+{
+    //NotificationPopViewController *pobjNotiPopViewCont = [[NotificationPopViewController alloc] initWithNibName:@"NotificationPopViewController" bundle:nil];
+    pobjNotiPopViewCont._notificationDelegate = pDelegate;
+    
+    //pobjPopoverNotification = [[UIPopoverController alloc] initWithContentViewController:pobjNotiPopViewCont];
+    pobjPopoverNotification.popoverBackgroundViewClass = [CustomPopoverBackgroundView class];
+    [pobjPopoverNotification setDelegate:pDelegate];
+    
+    CGFloat fltNotiHeight = [self getNotificationPopHeight:pintNotiCount];
+    pobjPopoverNotification.popoverContentSize = CGSizeMake(300.0, fltNotiHeight);
+    
+    UIButton *btnSender = (UIButton *)sender;
+    CGRect popFrame=btnSender.frame;
+    popFrame.origin.y = popFrame.origin.y-3.0;
+    
+    [pobjPopoverNotification presentPopoverFromRect:popFrame inView:pViewController.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES]; //UIPopoverArrowDirectionAny
+    
+    pobjNotiPopViewCont.contentSizeForViewInPopover = CGSizeMake(300.0, fltNotiHeight);
+    //[pobjNotiPopViewCont release];
+    
+    [FunctionManager removeInnerShadowOfPopover];
+}*/
++ (void)showNotificationPopover:(AppDelegate*)pAppDelegate withControlDelegate:(id)pDelegate withSender:(id)sender withDisplayViewController:(UIViewController*)pViewController
+{
+    pAppDelegate.objNotificationViewController._notificationDelegate = pDelegate;
+ 
+    CGFloat fltNotiHeight = [self getNotificationPopHeight:pAppDelegate.intNotificationCount];
+    
+    pAppDelegate.objPopoverController.popoverBackgroundViewClass = [CustomPopoverBackgroundView class];
+    [pAppDelegate.objPopoverController setDelegate:pDelegate];
+    pAppDelegate.objPopoverController.popoverContentSize = CGSizeMake(300.0, fltNotiHeight);
+    
+    UIButton *btnSender = (UIButton *)sender;
+    CGRect popFrame=btnSender.frame;
+    popFrame.origin.y = popFrame.origin.y-3.0;
+    
+    [pAppDelegate.objPopoverController presentPopoverFromRect:popFrame inView:pViewController.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES]; //UIPopoverArrowDirectionAny
+    
+    pAppDelegate.objNotificationViewController.contentSizeForViewInPopover = CGSizeMake(300.0, fltNotiHeight);
+    
+    [FunctionManager removeInnerShadowOfPopover];
+}
++ (CGFloat)getNotificationPopHeight:(int)pintNotificationCount
+{
+    if((CGFloat)((pintNotificationCount*g_Notification_Cell_Height)+55.0) > kNOTIFICATION_MAX_HEIGHT)
+        return (CGFloat)kNOTIFICATION_MAX_HEIGHT;
+    else
+        return (CGFloat)((pintNotificationCount*g_Notification_Cell_Height)+55.0);
+    
+    //return (CGFloat)((pintNotificationCount*g_Notification_Cell_Height)+55.0);
+    //return (CGFloat)460.0;
+}
+
+@end

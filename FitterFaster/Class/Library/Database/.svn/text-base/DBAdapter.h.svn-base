@@ -1,0 +1,35 @@
+//
+//  DBAdapter.h
+//  iOSCodeStructure
+//
+//  Created by Nishant on 10/01/13.
+//  Copyright (c) 2013 Nishant. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "Employee.h"
+
+@interface DBAdapter : NSObject {
+	//database related properties
+	sqlite3 *database;
+	
+	//Appdelegate
+	AppDelegate *appDelegate;
+}
+@property (nonatomic) sqlite3 *database;
+
+//instance methods called once
+-(id)init;
+
+//Function to check for Database whether exists or not. If not copy it to document directory
+-(void)checkAndCreateDatabase;
+
+
+//Sample Methods of Select/Insert/Update/Delete to Copy
+-(void)selectEmployeeByEmployeeId:(int)pintEmployeeId :(NSMutableArray *)pArrEmployee;
+-(int)insertEmployee:(Employee *)pobjEmployee;
+-(BOOL)updateEmployee:(Employee *)pobjEmployee;
+-(BOOL)deleteEmployeeByEmployeeId:(int)pintEmployeeId;
+
+@end

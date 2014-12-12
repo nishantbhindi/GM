@@ -1,0 +1,60 @@
+//
+//  GW Whiteboard-PrefixHeader.pch
+//  GW Whiteboard
+//
+//  Created by WebInfoways on 03/11/14.
+//  Copyright (c) 2014 Test. All rights reserved.
+//
+
+#ifndef FitterFaster_FitterFaster_PrefixHeader_pch
+#define FitterFaster_FitterFaster_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+/*
+ title text color: RGB 72 67 37
+ content text color: RGB 124 124 124
+ form field text color : RGB 183 181 180
+ */
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioToolbox.h>
+#import <AVFoundation/AVFoundation.h>
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+#import <MessageUI/MFMessageComposeViewController.h>
+#import <CoreImage/CoreImage.h>
+#import <QuartzCore/QuartzCore.h>
+#import <sqlite3.h>
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
+#import <CoreLocation/CoreLocation.h>
+#import <EventKit/EventKit.h>
+#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <MediaPlayer/MediaPlayer.h>
+
+#import "AFNetworking.h"
+
+#import "AppDelegate.h"
+
+#import "Global.h"
+#import "Key.h"
+#import "Message.h"
+
+#import "NSString+Extras.h"
+#import "NSString+HTML.h"
+#import "NSDate+Extras.h"
+#import "NSMutableArray+Extras.h"
+#import "AJNotificationView.h"
+
+#import "KGModal.h"
+
+#import "UITextView+Extras.h"
+#import "UITextViewPlaceHolder.h"
+
+//#import "NBPageControl.h"
+
+#endif
